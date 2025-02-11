@@ -27,7 +27,7 @@ async function main() {
   contentToMarkdown(content);
 }
 
-async function contentToMarkdown(content) {
+async function contentToMarkdown(content: string) {
   fs.writeFile(output_file, content, (err) => {
     if (err) {
       console.error(err);
@@ -37,7 +37,7 @@ async function contentToMarkdown(content) {
   });
 }
 
-async function formatContentWithAI(rawDiff) {
+async function formatContentWithAI(rawDiff: string) {
   console.log("🤖 Formateando contenido con OpenAI");
   const openai = new OpenAI();
   const completion = await openai.chat.completions.create({
@@ -68,10 +68,12 @@ ${rawDiff}`,
     model: "gpt-4o",
   });
 
-  return completion.choices[0].message.content;
+  return completion.choices[0].message.content
+    ? completion.choices[0].message.content
+    : "";
 }
 
-async function getContent(files) {
+async function getContent(files: string[]) {
   console.log(`🔍 Obteniendo diferencias`);
   let content = "";
   for (const file of files) {
@@ -80,9 +82,9 @@ async function getContent(files) {
   return content;
 }
 
-async function getSummary(branch1, branch2, base_dir) {
+async function getSummary(branch1: string, branch2: string, base_dir: string) {
   console.log("🔍 Obteniendo resumen de diferencias");
-  const files = [];
+  const files: string[] = [];
   const diff = await git.diffSummary([
     `${branch1}..${branch2}`,
     "--",
@@ -98,7 +100,7 @@ async function getSummary(branch1, branch2, base_dir) {
   return files;
 }
 
-async function getDiff(branch1, branch2, file) {
+async function getDiff(branch1: string, branch2: string, file: string) {
   try {
     return await git.diff([`${branch1}..${branch2}`, "--", base_dir + file]);
   } catch (err) {

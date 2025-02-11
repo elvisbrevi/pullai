@@ -3,10 +3,10 @@ import fs from "node:fs";
 import OpenAI from "openai";
 
 const branch1 = "master";
-const branch2 = "feature/variables-consul";
+const branch2 = "feature/15256-portar-logica-biztalk";
 const base_dir =
-  "/Users/elvisbrevi/Code/sag/sag.import.notificastatuspago.api/";
-const output_file = "notificastatuspago.md";
+  "/Users/elvisbrevi/Code/sag/sag.portalpagos.micsrv.obtenertoken.v1/";
+const output_file = "obtenertoken.md";
 
 const git = simpleGit(base_dir);
 
@@ -72,7 +72,7 @@ ${rawDiff}`,
 }
 
 async function getContent(files) {
-  console.log(`🔍 Obteniendo diferencias para el archivo ${file}`);
+  console.log(`🔍 Obteniendo diferencias`);
   let content = "";
   for (const file of files) {
     content += await getDiff(branch1, branch2, file);

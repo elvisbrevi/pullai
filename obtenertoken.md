@@ -1,76 +1,83 @@
-# Descripción de la Pull Request
+# Descripción
 
-## Descripción
-Este pull request implementa múltiples cambios y mejoras estructurales en el proyecto. Se han introducido nuevos archivos, modificado varios existentes y eliminado algunos archivos que ya no son necesarios. Además, se han actualizado configuraciones y dependencias para mejorar la funcionalidad y eficiencia del sistema.
+Este pull request introduce una serie de importantes cambios y mejoras en el proyecto. Los cambios clave incluyen la reorganización de la estructura del servidor, la migración de SOAP a una arquitectura más moderna e integraciones adaptadas a REST, y la optimización de los pipelines de CI/CD con Azure. Además, se han incorporado configuraciones avanzadas para la gestión de logs y trazabilidad con SAG, y se ha mejorado la documentación con Swagger.
 
-## Archivos Agregados
-- `app.js`
-- `deploy-docker-compose.yml`
-- `deploy-openshift.yaml`
-- `deploy-paths.json`
-- `server.js`
-- `src/config/bkp_config.js`
-- `src/config/config.default.json`
-- `src/config/config.js`
-- `src/config/db.js`
-- `src/controllers/tokenController.js`
-- `src/models/userModel.js`
-- `src/routes/health.js`
-- `src/routes/info.js`
-- `src/routes/token.js`
-- `src/services/tokenService.js`
-- `swagger.yaml`
+1. **Reestructuración del Servidor**: Se ha reemplazado el archivo `index.js` con una implementación más modular y escalable en `server.js` y `app.js`, mejorando la organización del código y la separación de responsabilidades.
 
-## Archivos Modificados
-- `Dockerfile`
-- `README.md`
-- `azure-pipelines.yml`
-- `package.json`
+2. **Configuración de CI/CD**: Se modificó `azure-pipelines.yml` para incluir nuevas condiciones y parámetros relacionados con SonarQube y otras herramientas de seguridad. Se añadieron configuraciones específicas para distintas plataformas de despliegue, como Docker Compose y OpenShift.
 
-## Archivos Eliminados
-- `config/config.js`
-- `index.js`
+3. **Documentación con Swagger**: Se ha añadido un nuevo archivo `swagger.yaml` que proporciona especificaciones OpenAPI para la API de obtención de token, mejorando significativamente la documentación para desarrolladores e integradores.
 
-## Detalles del Cambio
-### Modificaciones en archivos existentes
-- **Dockerfile**
-  - Se ha cambiado la instalación `npm i` a `npm install --quiet`.
-  - Se copió el archivo `.npmrc` y se cambió el comando de inicio del contenedor de `index.js` a `app.js`.
+4. **Integración con Consul y Gestión de Configuraciones**: Las configuraciones ahora se gestionan dinámicamente mediante Consul, simplificando la operación y mejorando la flexibilidad para manejar múltiples entornos (dev, qa, test, prod).
 
-- **README.md**
-  - Se ha reemplazado el contenido inicial por un ejemplo de archivo `.ENV` para facilitar la configuración.
+5. **Gestión de logs y trazabilidad**: Se ha integrado SAGLog y herramientas de trazabilidad para un seguimiento detallado y análisis del rendimiento del sistema.
 
-- **azure-pipelines.yml**
-  - Se añadieron nuevos parámetros para controlar la ejecución de SonarQube y SecurityRev.
-  - Se actualizaron tareas de construcción y autenticación NPM. 
-  - Se modificó para incluir configuraciones de despliegue adicionales y pasos de comprobación de entorno para SonarQube.
+# Archivos Añadidos
 
-- **package.json**
-  - Se cambió el nombre del proyecto y la versión.
-  - Se actualizó la propiedad `main` para apuntar a `app.js`.
-  - Se añadieron nuevas dependencias y se creó un script de inicio para desarrollo.
-
-### Archivos nuevos y detalles del contenido
 - **app.js**
-  - Script principal que instancia y ejecuta el servidor configurado.
-
+- **deploy-docker-compose.yml**
+- **deploy-openshift.yaml**
+- **deploy-paths.json**
 - **server.js**
-  - Define una clase `Server` que gestiona la configuración del servidor, middlewares, rutas, y la inicialización del sistema.
-
-- **src/** (configuraciones, controladores, modelos, rutas, servicios)
-  - Varios archivos nuevos que estructuran y organizan la lógica del proyecto, como `config.js`, `db.js`, `tokenController.js`, y `tokenService.js`.
-
-- **Archivos de despliegue**
-  - `deploy-docker-compose.yml`, `deploy-openshift.yaml`: scripts de configuración para orquestadores de contenedores.
-
+- **src/config/bkp_config.js**
+- **src/config/config.default.json**
+- **src/config/config.js**
+- **src/config/db.js**
+- **src/controllers/tokenController.js**
+- **src/models/userModel.js**
+- **src/routes/health.js**
+- **src/routes/info.js**
+- **src/routes/token.js**
+- **src/services/tokenService.js**
 - **swagger.yaml**
-  - Definiciones de API usando OpenAPI 3.0 para la documentación y pruebas del servicio.
 
-### Archivos Eliminados
+# Archivos Modificados
+
+- **Dockerfile**
+- **README.md**
+- **azure-pipelines.yml**
+- **package.json**
+
+# Archivos Eliminados
+
 - **config/config.js**
-  - Código de configuración anterior eliminado para dar paso a la nueva estructura modular.
-  
 - **index.js**
-  - Eliminado al ser remplazado por el nuevo sistema de servidor en `server.js`.
 
-Estas modificaciones en general mejoran la estructura y organización del código, además de facilitar futuras implementaciones de funciones, integración de servicios de terceros como SonarQube y mejoran la mantenibilidad del proyecto en su conjunto.
+# Detalles del Cambio
+
+## Dockerfile
+
+- Se cambió el archivo de inicio de `index.js` a `app.js`.
+- Cambio en el comando de instalación de npm para utilizar `npm install --quiet`, mejorando el tiempo de construcción al evitar mensajes de consola innecesarios.
+
+## README.md
+
+- Reemplazado contenido placeholder con ejemplo de configuración .ENV. Esto facilita a los usuarios inicializar el entorno de desarrollo con variables de entorno correctas.
+
+## azure-pipelines.yml
+
+- Se añadieron parámetros para activar SonarQube y SecurityRev, mejorando la integración continua con capacidades avanzadas de análisis y seguridad.
+- Cambio en la configuración de la `pool` para utilizar un agente específico SAG.
+- Añadidos pasos para la preparación y ejecución manual de SonarQube.
+- Implementación de autenticación npm para trabajar con registros privados.
+- Añadida tarea para ejecutar Microsoft Security DevOps.
+
+## package.json
+
+- Actualización del nombre del proyecto y la guía de versionado a "sag.portalpagos.micsrv.obtenertoken.v1".
+- Se eliminaron dependencias no utilizadas y añadieron nuevas relacionadas con la arquitectura revisada, como `@sag/consulconn` y `@sag/registrologs`.
+
+## app.js / server.js
+
+- Reorganización completa de la lógica de servidor, introduciendo clases y métodos que encapsulan configuraciones, middlewares, rutas y la inicialización de la aplicación.
+- Se añadió capacidad para carga dinámica de configuración mediante Consul y otros servicios de SAG para mejor escalabilidad y mantenimiento.
+
+## swagger.yaml
+
+- Nuevo archivo de especificación API usando OpenAPI v3 para documentar claramente los endpoints disponibles en la aplicación, incluyendo parámetros esperados y códigos de respuesta.
+
+## src/config
+
+- Incorporación de un sistema de gestión de configuraciones que soporta fuentes tanto locales como remotas (Consul), permitiendo flexibilidad y dinámicas de configuración.
+
+Estos cambios son cruciales para modernizar la arquitectura de la aplicación, promover mejores prácticas y optimizar las operaciones DevOps.

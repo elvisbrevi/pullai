@@ -1,4 +1,3 @@
-```markdown
 # Descripción de la Pull Request
 
 ## Descripción
@@ -75,4 +74,3 @@ Este pull request implementa múltiples cambios y mejoras estructurales en el pr
   - Eliminado al ser remplazado por el nuevo sistema de servidor en `server.js`.
 
 Estas modificaciones en general mejoran la estructura y organización del código, además de facilitar futuras implementaciones de funciones, integración de servicios de terceros como SonarQube y mejoran la mantenibilidad del proyecto en su conjunto.
-```

@@ -1,3 +1,4 @@
+#! /usr/bin/env bun
 import simpleGit from "simple-git";
 import fs from "node:fs";
 import OpenAI from "openai";
@@ -24,7 +25,7 @@ async function main() {
   const diffSummary = await getSummary(branch1, branch2, base_dir);
   let content = await getContent(diffSummary);
   content = await formatContentWithAI(content);
-  contentToMarkdown(content);
+  //contentToMarkdown(content);
 }
 
 async function contentToMarkdown(content: string) {

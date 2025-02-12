@@ -2,14 +2,37 @@
 import simpleGit from "simple-git";
 import fs from "node:fs";
 import OpenAI from "openai";
+import select, { Separator } from "@inquirer/select";
 
-const branch1 = "master";
-const branch2 = "feature/15256-portar-logica-biztalk";
-const base_dir =
-  "/Users/elvisbrevi/Code/sag/sag.portalpagos.micsrv.obtenertoken.v1/";
+type Choice<T> = {
+  name: string;
+  value: T;
+  description?: string;
+};
+
+const currentDir = process.cwd();
+const git = simpleGit(currentDir);
+
+const branchSummary = await git.branch();
+const branchChoices: Choice<string>[] = [];
+for (const branch in branchSummary.branches) {
+  branchChoices.push({
+    name: branch,
+    value: branch,
+    description: branchSummary.branches[branch].label,
+  });
+}
+
+const originBranch = await select({
+  message: "Select a origin branch to merge",
+  choices: branchChoices,
+});
+const targetBranch = await select({
+  message: "Select a target branch to merge",
+  choices: branchChoices,
+});
+
 const output_file = "obtenertoken.md";
-
-const git = simpleGit(base_dir);
 
 const ignoredFiles = [
   "node_modules",
@@ -22,10 +45,10 @@ const ignoredFiles = [
 ];
 
 async function main() {
-  const diffSummary = await getSummary(branch1, branch2, base_dir);
+  const diffSummary = await getSummary(targetBranch, originBranch, currentDir);
   let content = await getContent(diffSummary);
   content = await formatContentWithAI(content);
-  //contentToMarkdown(content);
+  contentToMarkdown(content);
 }
 
 async function contentToMarkdown(content: string) {
@@ -78,7 +101,7 @@ async function getContent(files: string[]) {
   console.log(`🔍 Obteniendo diferencias`);
   let content = "";
   for (const file of files) {
-    content += await getDiff(branch1, branch2, file);
+    content += await getDiff(targetBranch, originBranch, file);
   }
   return content;
 }
@@ -103,7 +126,7 @@ async function getSummary(branch1: string, branch2: string, base_dir: string) {
 
 async function getDiff(branch1: string, branch2: string, file: string) {
   try {
-    return await git.diff([`${branch1}..${branch2}`, "--", base_dir + file]);
+    return await git.diff([`${branch1}..${branch2}`, "--", currentDir + file]);
   } catch (err) {
     console.error("Error al obtener las diferencias:", err);
     return "";

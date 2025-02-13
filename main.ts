@@ -2,7 +2,8 @@
 import simpleGit from "simple-git";
 import fs from "node:fs";
 import OpenAI from "openai";
-import select, { Separator } from "@inquirer/select";
+import select from "@inquirer/select";
+import input from "@inquirer/input";
 
 type Choice<T> = {
   name: string;
@@ -10,7 +11,7 @@ type Choice<T> = {
   description?: string;
 };
 
-const currentDir = process.cwd();
+const currentDir = `${process.cwd()}/`;
 const git = simpleGit(currentDir);
 
 const branchSummary = await git.branch();
@@ -32,7 +33,10 @@ const targetBranch = await select({
   choices: branchChoices,
 });
 
-const output_file = "obtenertoken.md";
+const output_file = await input({
+  message: "Enter the file name",
+  required: true,
+});
 
 const ignoredFiles = [
   "node_modules",
@@ -46,12 +50,17 @@ const ignoredFiles = [
 
 async function main() {
   const diffSummary = await getSummary(targetBranch, originBranch, currentDir);
-  let content = await getContent(diffSummary);
+  let content = await setContent(
+    diffSummary,
+    targetBranch,
+    originBranch,
+    currentDir
+  );
   content = await formatContentWithAI(content);
-  contentToMarkdown(content);
+  await contentToMarkdown(content, output_file);
 }
 
-async function contentToMarkdown(content: string) {
+async function contentToMarkdown(content: string, output_file: string) {
   fs.writeFile(output_file, content, (err) => {
     if (err) {
       console.error(err);
@@ -97,22 +106,31 @@ ${rawDiff}`,
     : "";
 }
 
-async function getContent(files: string[]) {
+async function setContent(
+  files: string[],
+  targetBranch: string,
+  originBranch: string,
+  currentDir: string
+) {
   console.log(`🔍 Obteniendo diferencias`);
   let content = "";
   for (const file of files) {
-    content += await getDiff(targetBranch, originBranch, file);
+    content += await getDiff(targetBranch, originBranch, file, currentDir);
   }
   return content;
 }
 
-async function getSummary(branch1: string, branch2: string, base_dir: string) {
+async function getSummary(
+  targetBranch: string,
+  originBranch: string,
+  currentDir: string
+) {
   console.log("🔍 Obteniendo resumen de diferencias");
   const files: string[] = [];
   const diff = await git.diffSummary([
-    `${branch1}..${branch2}`,
+    `${targetBranch}..${originBranch}`,
     "--",
-    base_dir,
+    currentDir,
   ]);
 
   diff.files.forEach((file) => {
@@ -124,9 +142,18 @@ async function getSummary(branch1: string, branch2: string, base_dir: string) {
   return files;
 }
 
-async function getDiff(branch1: string, branch2: string, file: string) {
+async function getDiff(
+  targetBranch: string,
+  originBranch: string,
+  file: string,
+  currentDir: string
+) {
   try {
-    return await git.diff([`${branch1}..${branch2}`, "--", currentDir + file]);
+    return await git.diff([
+      `${targetBranch}..${originBranch}`,
+      "--",
+      currentDir + file,
+    ]);
   } catch (err) {
     console.error("Error al obtener las diferencias:", err);
     return "";

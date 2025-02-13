@@ -1,0 +1,65 @@
+#! /usr/bin/env bun
+
+import fs from "node:fs";
+
+import select from "@inquirer/select";
+import input from "@inquirer/input";
+import type { Choice } from "./types/choice";
+import { getDiff, getSummary, git } from "./services/git";
+import formatContentWithAI from "./ai-provider/openai";
+
+const branchSummary = await git.branch();
+const branchChoices: Choice<string>[] = [];
+for (const branch in branchSummary.branches) {
+  branchChoices.push({
+    name: branch,
+    value: branch,
+    description: branchSummary.branches[branch].label,
+  });
+}
+
+const originBranch = await select({
+  message: "Select a origin branch to merge",
+  choices: branchChoices,
+});
+const targetBranch = await select({
+  message: "Select a target branch to merge",
+  choices: branchChoices,
+});
+
+const output_file = await input({
+  message: "Enter the file name",
+  required: true,
+});
+
+async function main() {
+  const diffSummary = await getSummary(targetBranch, originBranch);
+  let content = await setContent(diffSummary, targetBranch, originBranch);
+  content = await formatContentWithAI(content);
+  await contentToMarkdown(content, output_file);
+}
+
+async function contentToMarkdown(content: string, output_file: string) {
+  fs.writeFile(`outputs/${output_file}`, content, (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(`✅ Archivo ${output_file} creado exitosamente`);
+    }
+  });
+}
+
+async function setContent(
+  files: string[],
+  targetBranch: string,
+  originBranch: string
+) {
+  console.log(`🔍 Obteniendo diferencias`);
+  let content = "";
+  for (const file of files) {
+    content += await getDiff(targetBranch, originBranch, file);
+  }
+  return content;
+}
+
+main();

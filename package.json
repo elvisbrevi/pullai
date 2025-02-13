@@ -6,7 +6,7 @@
     "@types/bun": "latest"
   },
   "bin": {
-    "prai": "./main.ts"
+    "prai": "./app/main.ts"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

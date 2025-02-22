@@ -19,16 +19,16 @@ for (const branch in branchSummary.branches) {
 }
 
 const originBranch = await select({
-  message: "Select a origin branch to merge",
+  message: "Select the source branch to merge from",
   choices: branchChoices,
 });
 const targetBranch = await select({
-  message: "Select a target branch to merge",
+  message: "Select the destination branch to merge into",
   choices: branchChoices,
 });
 
 const output_file = await input({
-  message: "Enter the file name",
+  message: "Enter the output file name",
   required: true,
 });
 
@@ -44,7 +44,7 @@ async function contentToMarkdown(content: string, output_file: string) {
     if (err) {
       console.error(err);
     } else {
-      console.log(`✅ Archivo ${output_file} creado exitosamente`);
+      console.log(`✅ File ${output_file} created successfully`);
     }
   });
 }
@@ -54,7 +54,7 @@ async function setContent(
   targetBranch: string,
   originBranch: string
 ) {
-  console.log(`🔍 Obteniendo diferencias`);
+  console.log(`🔍 Getting differences`);
   let content = "";
   for (const file of files) {
     content += await getDiff(targetBranch, originBranch, file);

@@ -8,6 +8,19 @@ import type { Choice } from "./types/choice";
 import { getDiff, getSummary, git } from "./services/git";
 import formatContentWithAI from "./ai-provider/openai";
 
+const languageChoices: Choice<string>[] = [
+  {
+    name: "English",
+    value: "en",
+    description: "Generate the document in English",
+  },
+  {
+    name: "Spanish",
+    value: "es",
+    description: "Generate the document in Spanish",
+  },
+];
+
 const branchSummary = await git.branch();
 const branchChoices: Choice<string>[] = [];
 for (const branch in branchSummary.branches) {
@@ -27,6 +40,11 @@ const targetBranch = await select({
   choices: branchChoices,
 });
 
+const selectedLanguage = await select({
+  message: "Select the output document language",
+  choices: languageChoices,
+});
+
 const output_file = await input({
   message: "Enter the output file name",
   required: true,
@@ -35,7 +53,7 @@ const output_file = await input({
 async function main() {
   const diffSummary = await getSummary(targetBranch, originBranch);
   let content = await setContent(diffSummary, targetBranch, originBranch);
-  content = await formatContentWithAI(content);
+  content = await formatContentWithAI(content, selectedLanguage);
   await contentToMarkdown(content, output_file);
 }
 

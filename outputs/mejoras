@@ -1,0 +1,40 @@
+# Descripción
+
+En esta actualización, se realiza una restructuración significativa del proyecto para mejorar su mantenibilidad y escalabilidad. Se introducen nuevas funcionalidades significativas al separar los servicios de AI y Git en archivos individuales modulares (`openai.ts` y `git.ts`, respectivamente). Se ha eliminado el archivo `main.ts` de nivel superior, el código ahora está organizado de manera más modular y eficiente dentro del directorio `app`. Esta modularización permite una mejor encapsulación de la lógica y una clara separación de responsabilidades, facilitando futuras ampliaciones y modificaciones. También se mejoró la interfaz de línea de comandos al integrar el uso de las librerías `@inquirer/input` y `@inquirer/select` para una interacción más dinámica con el usuario al seleccionar ramas y especificar archivos de salida. El cambio del nombre del paquete de `pr-ai` a `prai` y la adición de un comando ejecutable binario (`"prai": "./app/main.ts"`) en `package.json` optimizan el acceso a las funcionalidades del paquete desde la línea de comandos.
+
+# Archivos Agregados
+
+- `app/ai-provider/openai.ts`
+- `app/main.ts`
+- `app/services/git.ts`
+- `app/types/choice.ts`
+
+# Archivos Modificados
+
+- `package.json`
+
+# Archivos Eliminados
+
+- `main.ts`
+
+# Detalles del Cambio
+
+## app/ai-provider/openai.ts
+
+Este nuevo archivo define una función asincrónica `formatContentWithAI` que utiliza la API de OpenAI para formatear descripciones de pull request en español basadas en diferencias de Git. Se importa la librería `openai` y se introduce un mensaje de consola para indicar el inicio del proceso de formateo de contenido.
+
+## app/main.ts
+
+La nueva estructura modular del archivo principal ahora gestiona las interacciones de rama de manera más dinámica mediante el uso de `@inquirer/select` para la selección de ramas y `@inquirer/input` para la especificación del nombre de archivo de salida. La funcionalidad que determina las diferencias entre ramas se delega al servicio Git dedicado, y la integración de AI se hace utilizando el nuevo servicio OpenAI.
+
+## app/services/git.ts
+
+Este archivo encapsula las funciones relacionadas con Git, como obtener el resumen de las diferencias (`getSummary`) y las diferencias detalladas de un archivo específico (`getDiff`). Se hace uso de `simple-git` para realizar operaciones de Git desde el directorio actual de trabajo; además, se define una lista de archivos ignorados para evitar procesarlos en los resúmenes de diferencias.
+
+## app/types/choice.ts
+
+Define un tipo genérico `Choice` utilizado por `@inquirer/select` para manejar las opciones de selección en las operaciones interactivas de CLI, permitiendo describir cada opción con un nombre, valor y descripción opcional.
+
+## package.json
+
+Se modifica el nombre del paquete para alinearlo con las convenciones y se actualiza la sección de `bin` para incluir un comando ejecutable. Se incorporan nuevas dependencias `@inquirer/input` y `@inquirer/select` para mejorar la interacción con el usuario a través de la terminal.

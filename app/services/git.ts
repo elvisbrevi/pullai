@@ -13,7 +13,7 @@ const ignoredFiles = [
 ];
 
 async function getSummary(targetBranch: string, originBranch: string) {
-  console.log("🔍 Obteniendo resumen de diferencias");
+  console.log("🔍 Getting summary of differences");
   const files: string[] = [];
   const diff = await git.diffSummary([
     `${targetBranch}..${originBranch}`,
@@ -42,7 +42,7 @@ async function getDiff(
       currentDir + file,
     ]);
   } catch (err) {
-    console.error("Error al obtener las diferencias:", err);
+    console.error("Error getting differences:", err);
     return "";
   }
 }

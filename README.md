@@ -1,0 +1,125 @@
+# 🤖 PRAI - AI-Powered Pull Request Descriptions
+
+![GitHub](https://img.shields.io/badge/prai-v1.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+PRAI is a command-line tool that automatically generates descriptive and well-formatted pull request descriptions from Git diffs using AI. Save time and improve your PR documentation with smart, AI-generated content.
+
+## ✨ Features
+
+- 🔄 Compare any two Git branches
+- 🌐 Generate descriptions in multiple languages (English, Spanish)
+- 📝 Create well-structured Markdown documents
+- 🧠 AI-powered analysis of code changes
+- 🔍 Detailed breakdown of modifications, additions, and deletions
+
+## 📋 Table of Contents
+
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Examples](#-examples)
+- [Configuration](#-configuration)
+- [License](#-license)
+
+## 📦 Installation
+
+Ensure you have [Bun](https://bun.sh/) installed, then:
+
+```bash
+# Install globally
+bun install -g prai
+
+# Or install locally in a project
+bun install prai
+```
+
+You'll need an OpenAI API key set in your environment:
+
+```bash
+export OPENAI_API_KEY=your-api-key
+```
+
+## 🚀 Usage
+
+Run the tool with:
+
+```bash
+prai
+```
+
+Then follow the interactive prompts:
+
+1. Select the source branch (branch with changes)
+2. Select the destination branch (branch to merge into)
+3. Choose your preferred language for the output
+4. Enter a name for the output file
+
+The generated file will be saved in the `outputs/` directory.
+
+## 📝 Examples
+
+### Example Output
+
+Here's a sample of what a generated PR description might look like:
+
+```markdown
+# Description
+
+This PR introduces a major refactoring of the code structure, improving modularity 
+by separating AI and Git services into individual modules. The change enhances 
+maintainability and creates a cleaner architecture.
+
+# Added Files
+- app/ai-provider/openai.ts
+- app/services/git.ts
+- app/types/choice.ts
+
+# Modified Files
+- package.json
+- app/main.ts
+
+# Deleted Files
+- src/main.ts
+
+# Change Details
+
+## app/ai-provider/openai.ts
+This new file encapsulates all OpenAI API interactions, implementing a dedicated 
+function `formatContentWithAI` that handles PR description generation with 
+multilingual support.
+
+## app/services/git.ts
+This module contains all Git-related functionality, including methods to retrieve 
+branch differences and parse Git diffs. It implements proper error handling and 
+excludes irrelevant files from processing.
+
+## package.json
+Updated the package name from "pr-ai" to "prai" and added a binary executable 
+command to make the tool globally accessible.
+```
+
+## ⚙️ Configuration
+
+PRAI automatically ignores certain files when analyzing diffs:
+
+```typescript
+const ignoredFiles = [
+  "node_modules",
+  ".idea/",
+  ".lock",
+  ".env",
+  ".npmrc",
+  ".gitignore",
+  "package-lock.json",
+];
+```
+
+You can modify this list in `app/services/git.ts` to customize which files to exclude.
+
+## 📄 License
+
+MIT
+
+---
+
+Made with ❤️ using [OpenAI](https://openai.com/), [Bun](https://bun.sh/), and [Inquirer.js](https://github.com/SBoudrias/Inquirer.js)

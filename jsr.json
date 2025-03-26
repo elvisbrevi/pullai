@@ -1,0 +1,7 @@
+{
+  "name": "@elvisbrevi/pullai",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./app/main.ts"
+  }
+}

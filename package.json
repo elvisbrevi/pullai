@@ -1,12 +1,14 @@
 {
-  "name": "prai",
+  "name": "pullai",
+  "version": "1.0.0",
+  "description": "AI-Powered Pull Request Descriptions generator",
   "module": "main.ts",
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest"
   },
   "bin": {
-    "prai": "./app/main.ts"
+    "pullai": "./app/main.ts"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -16,5 +18,29 @@
     "@inquirer/select": "^4.0.8",
     "openai": "^4.83.0",
     "simple-git": "^3.27.0"
+  },
+  "author": "Elvis Brevi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elvisbrevi/prai.git"
+  },
+  "keywords": [
+    "pull-request",
+    "git",
+    "ai",
+    "openai",
+    "pr-description"
+  ],
+  "bugs": {
+    "url": "https://github.com/elvisbrevi/prai/issues"
+  },
+  "homepage": "https://github.com/elvisbrevi/prai#readme",
+  "exports": {
+    ".": "./app/main.ts"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   }
 }

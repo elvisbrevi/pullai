@@ -1,2 +1,10 @@
 node_modules/
+.DS_Store
+*.log
+.env
 outputs/*.md
+.idea/
+.vscode/
+coverage/
+dist/
+.npmrc

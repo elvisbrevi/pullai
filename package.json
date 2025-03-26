@@ -1,6 +1,6 @@
 {
   "name": "pullai",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AI-Powered Pull Request Descriptions generator",
   "module": "main.ts",
   "type": "module",
@@ -23,7 +23,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/elvisbrevi/prai.git"
+    "url": "https://github.com/elvisbrevi/pullai.git"
   },
   "keywords": [
     "pull-request",
@@ -33,9 +33,9 @@
     "pr-description"
   ],
   "bugs": {
-    "url": "https://github.com/elvisbrevi/prai/issues"
+    "url": "https://github.com/elvisbrevi/pullai/issues"
   },
-  "homepage": "https://github.com/elvisbrevi/prai#readme",
+  "homepage": "https://github.com/elvisbrevi/pullai#readme",
   "exports": {
     ".": "./app/main.ts"
   },

@@ -1,7 +1,5 @@
 #! /usr/bin/env bun
 
-import fs from "node:fs";
-
 import select from "@inquirer/select";
 import input from "@inquirer/input";
 import type { Choice } from "./types/choice";
@@ -58,13 +56,8 @@ async function main() {
 }
 
 async function contentToMarkdown(content: string, output_file: string) {
-  fs.writeFile(`outputs/${output_file}`, content, (err) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log(`✅ File ${output_file} created successfully`);
-    }
-  });
+  await Bun.write(`outputs/${output_file}.md`, content);
+  console.log(`✅ File ${output_file}.md created successfully`);
 }
 
 async function setContent(

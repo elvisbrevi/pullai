@@ -1,9 +1,9 @@
-# 🤖 PRAI - AI-Powered Pull Request Descriptions
+# 🤖 PULLAI - AI-Powered Pull Request Descriptions
 
-![GitHub](https://img.shields.io/badge/prai-v1.0.0-blue)
+![GitHub](https://img.shields.io/badge/pullai-v1.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-PRAI is a command-line tool that automatically generates descriptive and well-formatted pull request descriptions from Git diffs using AI. Save time and improve your PR documentation with smart, AI-generated content.
+PULLAI is a command-line tool that automatically generates descriptive and well-formatted pull request descriptions from Git diffs using AI. Save time and improve your PR documentation with smart, AI-generated content.
 
 ## ✨ Features
 
@@ -23,14 +23,26 @@ PRAI is a command-line tool that automatically generates descriptive and well-fo
 
 ## 📦 Installation
 
+### Using npm
+
+```bash
+# Install globally
+npm install -g pullai
+
+# Or install locally in a project
+npm install pullai
+```
+
+### Using Bun
+
 Ensure you have [Bun](https://bun.sh/) installed, then:
 
 ```bash
 # Install globally
-bun install -g prai
+bun install -g pullai
 
 # Or install locally in a project
-bun install prai
+bun install pullai
 ```
 
 You'll need an OpenAI API key set in your environment:
@@ -44,7 +56,7 @@ export OPENAI_API_KEY=your-api-key
 Run the tool with:
 
 ```bash
-prai
+pullai
 ```
 
 Then follow the interactive prompts:
@@ -92,15 +104,11 @@ multilingual support.
 This module contains all Git-related functionality, including methods to retrieve 
 branch differences and parse Git diffs. It implements proper error handling and 
 excludes irrelevant files from processing.
-
-## package.json
-Updated the package name from "pr-ai" to "prai" and added a binary executable 
-command to make the tool globally accessible.
 ```
 
 ## ⚙️ Configuration
 
-PRAI automatically ignores certain files when analyzing diffs:
+PULLAI automatically ignores certain files when analyzing diffs:
 
 ```typescript
 const ignoredFiles = [

@@ -26,9 +26,9 @@ async function formatContentWithAI(rawDiff: string, language: string) {
 }
 
 function getPrompt(rawDiff: string, language: string) {
-  return `Create a pull request description in ${
-    language === "en" ? "English" : "Spanish"
-  } based on the provided raw Git diff. The description should be in **Markdown format** but **must not be wrapped in code blocks** (e.g., \`\`\`markdown, \`\`\`).  
+  let languagePrompt = language === "en" ? "English" : "Spanish";
+  
+  return `Create a pull request description in ${languagePrompt} based on the provided raw Git diff. The description should be in **Markdown format** but **must not be wrapped in code blocks** (e.g., \`\`\`markdown, \`\`\`).  
 
 The description should include the following sections structure:  
 
@@ -43,7 +43,7 @@ The description should include the following sections structure:
 - Ensure that all relevant changes, including API modifications, business logic updates, and architectural improvements, are properly identified and described.
 - If a major refactor is detected, explain how it improves performance, maintainability, or security.
 - Titles must have the special markdown format (e.g., # Title).
-- The content must be written in ${language === "en" ? "English" : "Spanish"}.
+- The content and titles must be written in ${languagePrompt}.
 
 Here is the raw Git diff:  
 

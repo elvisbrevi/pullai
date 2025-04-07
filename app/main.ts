@@ -4,7 +4,7 @@ import select from "@inquirer/select";
 import input from "@inquirer/input";
 import type { Choice } from "./types/choice";
 import { getDiff, getSummary, git } from "./services/git";
-import formatContentWithAI from "./ai-provider/openai";
+import formatContentWithAI from "./ai-provider/ollama";
 
 const languageChoices: Choice<string>[] = [
   {

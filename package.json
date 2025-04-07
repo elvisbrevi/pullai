@@ -1,6 +1,8 @@
 {
   "name": "pullai",
   "version": "1.0.1",
+  "author": "Elvis Brevi",
+  "license": "MIT",
   "description": "AI-Powered Pull Request Descriptions generator",
   "module": "main.ts",
   "type": "module",
@@ -19,8 +21,6 @@
     "openai": "^4.83.0",
     "simple-git": "^3.27.0"
   },
-  "author": "Elvis Brevi",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/elvisbrevi/pullai.git"

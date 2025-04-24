@@ -11,6 +11,7 @@ PULLAI is a command-line tool that automatically generates descriptive and well-
 - 🌐 Generate descriptions in multiple languages (English, Spanish)
 - 📝 Create well-structured Markdown documents
 - 🧠 AI-powered analysis of code changes with multiple AI providers (OpenAI, Deepseek)
+- 📋 Multiple templates for different PR description styles (Standard, Concise, Detailed)
 - 🔍 Detailed breakdown of modifications, additions, and deletions
 
 ## 📋 Table of Contents
@@ -68,10 +69,11 @@ pullai
 Then follow the interactive prompts:
 
 1. Select the AI provider to use (OpenAI or Deepseek)
-2. Select the source branch (branch with changes)
-3. Select the destination branch (branch to merge into)
-4. Choose your preferred language for the output
-5. Enter a name for the output file
+2. Select the template to use (Standard, Concise, or Detailed)
+3. Select the source branch (branch with changes)
+4. Select the destination branch (branch to merge into)
+5. Choose your preferred language for the output
+6. Enter a name for the output file
 
 The generated file will be saved in the `outputs/` directory.
 

@@ -1,11 +1,11 @@
-#! /usr/bin/env bun
-
 import select from "@inquirer/select";
 import input from "@inquirer/input";
 import type { Choice } from "./types/choice";
 import { getDiff, getSummary, git } from "./services/git";
-import { aiProviders, getAIProvider } from "./ai-provider";
+import { aiProviderChoices, getAIProvider } from "./ai-provider";
+import { templateChoices, getTemplateByName } from "./templates";
 
+// Define language choices
 const languageChoices: Choice<string>[] = [
   {
     name: "English",
@@ -19,6 +19,7 @@ const languageChoices: Choice<string>[] = [
   },
 ];
 
+// Get branches
 const branchSummary = await git.branch();
 const branchChoices: Choice<string>[] = [];
 for (const branch in branchSummary.branches) {
@@ -32,23 +33,34 @@ for (const branch in branchSummary.branches) {
 // Select AI provider
 const selectedProvider = await select({
   message: "Select the AI provider to use",
-  choices: aiProviders,
+  choices: aiProviderChoices,
 });
 
+// Select template
+const selectedTemplate = await select({
+  message: "Select the template to use",
+  choices: templateChoices,
+});
+
+// Select branches
 const originBranch = await select({
   message: "Select the source branch to merge from",
   choices: branchChoices,
 });
+
+// Select target branch
 const targetBranch = await select({
   message: "Select the destination branch to merge into",
   choices: branchChoices,
 });
 
+// Select language
 const selectedLanguage = await select({
   message: "Select the output document language",
   choices: languageChoices,
 });
 
+// Select output file name
 const output_file = await input({
   message: "Enter the output file name",
   required: true,
@@ -59,11 +71,17 @@ async function main() {
     const diffSummary = await getSummary(targetBranch, originBranch);
     let content = await setContent(diffSummary, targetBranch, originBranch);
 
-    // Get the selected AI provider and use its formatContentWithAI function
+    // Get the selected AI provider and template
     const aiProvider = getAIProvider(selectedProvider);
+    const template = getTemplateByName(selectedTemplate);
 
     try {
-      content = await aiProvider.formatContentWithAI(content, selectedLanguage);
+      // Use the selected template and AI provider
+      content = await aiProvider.formatContentWithAI(
+        content,
+        selectedLanguage,
+        template.getTemplate
+      );
       await contentToMarkdown(content, output_file);
     } catch (error) {
       if (error instanceof Error) {

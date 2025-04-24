@@ -1,5 +1,7 @@
 import select from "@inquirer/select";
 import input from "@inquirer/input";
+import fs from "fs";
+import path from "path";
 import type { Choice } from "./types/choice";
 import { getDiff, getSummary, git } from "./services/git";
 import { aiProviderChoices, getAIProvider } from "./ai-provider";
@@ -111,8 +113,37 @@ async function main() {
 }
 
 async function contentToMarkdown(content: string, output_file: string) {
-  await Bun.write(`outputs/${output_file}.md`, content);
-  console.log(`✅ File ${output_file}.md created successfully`);
+  // Get the user's home directory
+  const homeDir = process.env.HOME || process.env.USERPROFILE;
+  let outputDir = 'outputs';
+  let outputPath = `outputs/${output_file}.md`;
+
+  // If we have a home directory, use a .pullai/outputs directory there
+  if (homeDir) {
+    // Create .pullai directory if it doesn't exist
+    const pullaiDir = path.join(homeDir, '.pullai');
+    if (!fs.existsSync(pullaiDir)) {
+      fs.mkdirSync(pullaiDir);
+    }
+
+    // Create outputs directory if it doesn't exist
+    const userOutputDir = path.join(pullaiDir, 'outputs');
+    if (!fs.existsSync(userOutputDir)) {
+      fs.mkdirSync(userOutputDir);
+    }
+
+    outputDir = userOutputDir;
+    outputPath = path.join(userOutputDir, `${output_file}.md`);
+  } else {
+    // Fallback to local outputs directory
+    if (!fs.existsSync('outputs')) {
+      fs.mkdirSync('outputs');
+    }
+  }
+
+  // Write the content to the file
+  await Bun.write(outputPath, content);
+  console.log(`✅ File ${output_file}.md created successfully in ${outputDir}`);
 }
 
 async function setContent(

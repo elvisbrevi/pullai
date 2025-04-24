@@ -35,15 +35,15 @@ export async function loadTemplatesFromDir(
 
     // Get all markdown files in the directory
     const files = fs.readdirSync(dirPath).filter((file) => file.endsWith(".md"));
-    
+
     // Load each template
     const templates: Template[] = [];
-    
+
     for (const file of files) {
       const filePath = path.join(dirPath, file);
       const content = fs.readFileSync(filePath, "utf-8");
       const fileName = path.basename(file, ".md");
-      
+
       // Create a template object
       templates.push({
         name: fileName.charAt(0).toUpperCase() + fileName.slice(1), // Capitalize first letter
@@ -52,7 +52,7 @@ export async function loadTemplatesFromDir(
         content,
       });
     }
-    
+
     return templates;
   } catch (error) {
     console.error(`Error loading templates from ${dirPath}:`, error);
@@ -68,37 +68,73 @@ export async function loadAllTemplates(): Promise<Template[]> {
     concise: "Brief, focused PR description with minimal details",
     detailed: "Comprehensive PR description with extensive technical details",
   };
-  
+
   // Get the application's root directory
   const appRoot = process.cwd();
-  
-  // Load built-in templates
-  const builtInTemplatesDir = path.join(appRoot, "templates");
-  const builtInTemplates = await loadTemplatesFromDir(builtInTemplatesDir, builtInDescriptions);
-  
-  // Load user templates from global installation directory if available
-  let userTemplates: Template[] = [];
-  
-  // Check for npm global installation directory
+
+  // Define directories to check for templates
+  const templateDirs: string[] = [];
+
+  // 1. Check for templates in the current working directory
+  templateDirs.push(path.join(appRoot, "templates"));
+
+  // 2. Check for templates in the user's home directory
+  const homeDir = process.env.HOME || process.env.USERPROFILE;
+  if (homeDir) {
+    templateDirs.push(path.join(homeDir, ".pullai", "templates"));
+  }
+
+  // 3. Check for templates in the global npm directory
   const npmGlobalDir = process.env.npm_config_prefix;
   if (npmGlobalDir) {
-    const userTemplatesDir = path.join(npmGlobalDir, "templates");
-    userTemplates = await loadTemplatesFromDir(userTemplatesDir);
+    templateDirs.push(path.join(npmGlobalDir, "lib", "node_modules", "pullai", "templates"));
   }
-  
-  // Combine templates, giving precedence to user templates
-  const allTemplates = [...builtInTemplates];
-  
-  // Add user templates, overriding built-in ones with the same name
-  for (const userTemplate of userTemplates) {
-    const existingIndex = allTemplates.findIndex(t => t.value === userTemplate.value);
-    if (existingIndex >= 0) {
-      allTemplates[existingIndex] = userTemplate;
-    } else {
-      allTemplates.push(userTemplate);
+
+  // Load templates from all directories
+  let allTemplates: Template[] = [];
+
+  // First load built-in templates
+  for (const dir of templateDirs) {
+    const templates = await loadTemplatesFromDir(dir, builtInDescriptions);
+
+    // Add templates, giving precedence to already loaded ones
+    for (const template of templates) {
+      const existingIndex = allTemplates.findIndex(t => t.value === template.value);
+      if (existingIndex >= 0) {
+        // Skip this template as we already have one with the same name
+        continue;
+      } else {
+        allTemplates.push(template);
+      }
     }
   }
-  
+
+  // Create the user's template directory if it doesn't exist
+  if (homeDir) {
+    const userTemplateDir = path.join(homeDir, ".pullai", "templates");
+    try {
+      if (!fs.existsSync(path.join(homeDir, ".pullai"))) {
+        fs.mkdirSync(path.join(homeDir, ".pullai"));
+      }
+      if (!fs.existsSync(userTemplateDir)) {
+        fs.mkdirSync(userTemplateDir);
+
+        // Copy default templates to user directory
+        const defaultTemplatesDir = path.join(appRoot, "templates");
+        if (fs.existsSync(defaultTemplatesDir)) {
+          const templateFiles = fs.readdirSync(defaultTemplatesDir).filter(file => file.endsWith(".md"));
+          for (const file of templateFiles) {
+            const content = fs.readFileSync(path.join(defaultTemplatesDir, file), "utf-8");
+            fs.writeFileSync(path.join(userTemplateDir, file), content);
+          }
+          console.log(`✅ Default templates copied to ${userTemplateDir}`);
+        }
+      }
+    } catch (error) {
+      console.error(`❌ Error creating user template directory: ${error}`);
+    }
+  }
+
   return allTemplates;
 }
 
@@ -106,18 +142,18 @@ export async function loadAllTemplates(): Promise<Template[]> {
 export async function getTemplateByName(templateName: string): Promise<Template> {
   const templates = await loadAllTemplates();
   const template = templates.find((t) => t.value === templateName);
-  
+
   if (!template) {
     throw new Error(`Template '${templateName}' not found`);
   }
-  
+
   return template;
 }
 
 // Function to get template choices for the select component
 export async function getTemplateChoices(): Promise<Choice<string>[]> {
   const templates = await loadAllTemplates();
-  
+
   return templates.map((template) => ({
     name: template.name,
     value: template.value,

@@ -75,7 +75,7 @@ Then follow the interactive prompts:
 5. Choose your preferred language for the output
 6. Enter a name for the output file
 
-The generated file will be saved in the `outputs/` directory.
+The generated file will be saved in the `~/.pullai/outputs/` directory in your home folder, making it easily accessible for future reference.
 
 ## 📝 Examples
 
@@ -140,13 +140,22 @@ const ignoredFiles = [
 
 You can modify this list in `app/services/git.ts` to customize which files to exclude.
 
+### File Locations
+
+When PULLAI is installed, it creates the following directories in your home folder:
+
+- `~/.pullai/templates/` - Contains your custom templates
+- `~/.pullai/outputs/` - Contains your generated PR descriptions
+
+These directories are created automatically the first time you run the application. The default templates are copied to your templates directory, allowing you to customize them without affecting the original installation.
+
 ### Custom Templates
 
-PULLAI supports custom templates for PR descriptions. You can create your own templates by adding markdown files to the `templates` directory in your global npm installation directory.
+PULLAI supports custom templates for PR descriptions. You can create your own templates by adding markdown files to the `~/.pullai/templates/` directory.
 
 To create a custom template:
 
-1. Create a markdown file (e.g., `my-template.md`) in the `templates` directory
+1. Create a markdown file (e.g., `my-template.md`) in the `~/.pullai/templates/` directory
 2. Use the following placeholders in your template:
    - `{{language}}`: Will be replaced with "English" or "Spanish" based on the selected language
    - `{{diff}}`: Will be replaced with the Git diff content
@@ -170,6 +179,15 @@ This PR makes the following changes:
 ```
 
 When you run PULLAI, your custom templates will appear in the template selection menu alongside the built-in templates.
+
+### AI Models
+
+PULLAI uses the following AI models:
+
+- **OpenAI**: Uses the `gpt-4-turbo` model for generating PR descriptions
+- **Deepseek**: Uses the `deepseek-reasoner` model for generating PR descriptions
+
+These models provide high-quality, detailed analyses of your code changes and generate well-structured PR descriptions.
 
 ## 📄 License
 

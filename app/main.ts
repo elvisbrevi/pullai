@@ -1,3 +1,5 @@
+#!/usr/bin/env bun
+
 import select from "@inquirer/select";
 import input from "@inquirer/input";
 import fs from "fs";

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Find the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Get the parent directory (project root)
+PROJECT_DIR="$( cd "$SCRIPT_DIR/.." && pwd )"
+
+# Run the main.ts file with Bun
+exec bun "$PROJECT_DIR/app/main.ts" "$@"

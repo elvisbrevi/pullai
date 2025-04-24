@@ -4,13 +4,13 @@
   "author": "Elvis Brevi",
   "license": "MIT",
   "description": "AI-Powered Pull Request Descriptions generator",
-  "module": "main.ts",
+  "module": "app/main.ts",
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest"
   },
   "bin": {
-    "pullai": "./app/main.ts"
+    "pullai": "./bin/pullai"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -39,6 +39,11 @@
   "exports": {
     ".": "./app/main.ts"
   },
+  "files": [
+    "app",
+    "bin",
+    "templates"
+  ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"

@@ -24,6 +24,18 @@ PULLAI is a command-line tool that automatically generates descriptive and well-
 
 ## 📦 Installation
 
+### Prerequisites
+
+This tool requires [Bun](https://bun.sh/) to be installed on your system. If you don't have Bun installed, you can install it with:
+
+```bash
+# For macOS, Linux, and WSL
+curl -fsSL https://bun.sh/install | bash
+
+# For Windows (using PowerShell)
+powershell -c "irm bun.sh/install.ps1 | iex"
+```
+
 ### Using npm
 
 ```bash
@@ -36,14 +48,31 @@ npm install pullai
 
 ### Using Bun
 
-Ensure you have [Bun](https://bun.sh/) installed, then:
-
 ```bash
 # Install globally
 bun install -g pullai
 
 # Or install locally in a project
 bun install pullai
+```
+
+### Development Installation
+
+If you're developing or modifying the tool, you can link it locally:
+
+```bash
+# Clone the repository
+git clone https://github.com/elvisbrevi/pullai.git
+cd pullai
+
+# Install dependencies
+bun install
+
+# Link the package for local development
+bun link
+
+# Now you can run the tool with
+pullai
 ```
 
 You'll need to set environment variables for the API keys of the AI providers you want to use:

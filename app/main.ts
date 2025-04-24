@@ -3,7 +3,7 @@ import input from "@inquirer/input";
 import type { Choice } from "./types/choice";
 import { getDiff, getSummary, git } from "./services/git";
 import { aiProviderChoices, getAIProvider } from "./ai-provider";
-import { templateChoices, getTemplateByName } from "./templates";
+import { getTemplateByName, getTemplateChoices, getTemplateContent } from "./services/template-loader";
 
 // Define language choices
 const languageChoices: Choice<string>[] = [
@@ -36,7 +36,8 @@ const selectedProvider = await select({
   choices: aiProviderChoices,
 });
 
-// Select template
+// Get template choices and select a template
+const templateChoices = await getTemplateChoices();
 const selectedTemplate = await select({
   message: "Select the template to use",
   choices: templateChoices,
@@ -73,14 +74,19 @@ async function main() {
 
     // Get the selected AI provider and template
     const aiProvider = getAIProvider(selectedProvider);
-    const template = getTemplateByName(selectedTemplate);
+    const template = await getTemplateByName(selectedTemplate);
 
     try {
+      // Create a template function that uses the loaded template content
+      const templateFunction = (rawDiff: string, language: string) => {
+        return getTemplateContent(rawDiff, language, template.content);
+      };
+
       // Use the selected template and AI provider
       content = await aiProvider.formatContentWithAI(
         content,
         selectedLanguage,
-        template.getTemplate
+        templateFunction
       );
       await contentToMarkdown(content, output_file);
     } catch (error) {

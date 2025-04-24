@@ -122,6 +122,8 @@ excludes irrelevant files from processing.
 
 ## ⚙️ Configuration
 
+### Ignored Files
+
 PULLAI automatically ignores certain files when analyzing diffs:
 
 ```typescript
@@ -137,6 +139,37 @@ const ignoredFiles = [
 ```
 
 You can modify this list in `app/services/git.ts` to customize which files to exclude.
+
+### Custom Templates
+
+PULLAI supports custom templates for PR descriptions. You can create your own templates by adding markdown files to the `templates` directory in your global npm installation directory.
+
+To create a custom template:
+
+1. Create a markdown file (e.g., `my-template.md`) in the `templates` directory
+2. Use the following placeholders in your template:
+   - `{{language}}`: Will be replaced with "English" or "Spanish" based on the selected language
+   - `{{diff}}`: Will be replaced with the Git diff content
+
+Example custom template:
+
+```markdown
+# PR Summary for {{language}} Review
+
+## Overview
+
+This PR makes the following changes:
+
+{{diff}}
+
+## Checklist
+
+- [ ] Code follows the style guidelines
+- [ ] Documentation has been updated
+- [ ] Tests have been added/updated
+```
+
+When you run PULLAI, your custom templates will appear in the template selection menu alongside the built-in templates.
 
 ## 📄 License
 

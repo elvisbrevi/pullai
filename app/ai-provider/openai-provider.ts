@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { AIProviderStrategy } from "./base-provider";
-import type { TemplateFunction } from "../templates";
+import type { TemplateFunction } from "./base-provider";
 
 export class OpenAIProvider extends AIProviderStrategy {
   constructor() {
@@ -38,7 +38,7 @@ export class OpenAIProvider extends AIProviderStrategy {
           content: prompt,
         },
       ],
-      model: "gpt-4",
+      model: "gpt-4-turbo",
     });
 
     return completion.choices[0].message.content

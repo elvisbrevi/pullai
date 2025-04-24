@@ -1,7 +1,4 @@
-export function getConciseTemplate(rawDiff: string, language: string): string {
-  return `Create a concise pull request description in ${
-    language === "en" ? "English" : "Spanish"
-  } based on the provided raw Git diff. The description should be in **Markdown format** but **must not be wrapped in code blocks**.
+Create a concise pull request description in {{language}} based on the provided raw Git diff. The description should be in **Markdown format** but **must not be wrapped in code blocks**.
 
 The description should be brief but informative, with the following sections:
 
@@ -13,9 +10,8 @@ The description should be brief but informative, with the following sections:
 - Keep the description concise and to the point.
 - Focus on the most important changes only.
 - Use simple language and avoid technical jargon when possible.
-- The content must be written in ${language === "en" ? "English" : "Spanish"}.
+- The content must be written in {{language}}.
 
 Here is the raw Git diff:
 
-${rawDiff}`;
-}
+{{diff}}

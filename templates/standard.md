@@ -1,7 +1,4 @@
-export function getStandardTemplate(rawDiff: string, language: string): string {
-  return `Create a pull request description in ${
-    language === "en" ? "English" : "Spanish"
-  } based on the provided raw Git diff. The description should be in **Markdown format** but **must not be wrapped in code blocks** (e.g., \`\`\`markdown, \`\`\`).  
+Create a pull request description in {{language}} based on the provided raw Git diff. The description should be in **Markdown format** but **must not be wrapped in code blocks** (e.g., ```markdown, ```).  
 
 The description should include the following sections structure:  
 
@@ -16,9 +13,8 @@ The description should include the following sections structure:
 - Ensure that all relevant changes, including API modifications, business logic updates, and architectural improvements, are properly identified and described.
 - If a major refactor is detected, explain how it improves performance, maintainability, or security.
 - Titles must have the special markdown format (e.g., # Title).
-- The content must be written in ${language === "en" ? "English" : "Spanish"}.
+- The content must be written in {{language}}.
 
 Here is the raw Git diff:  
 
-${rawDiff}`;
-}
+{{diff}}

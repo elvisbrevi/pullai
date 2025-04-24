@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { AIProviderStrategy } from "./base-provider";
-import type { TemplateFunction } from "../templates";
+import type { TemplateFunction } from "./base-provider";
 
 export class DeepseekProvider extends AIProviderStrategy {
   constructor() {

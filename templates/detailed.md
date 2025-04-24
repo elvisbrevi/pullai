@@ -1,7 +1,4 @@
-export function getDetailedTemplate(rawDiff: string, language: string): string {
-  return `Create a comprehensive and detailed pull request description in ${
-    language === "en" ? "English" : "Spanish"
-  } based on the provided raw Git diff. The description should be in **Markdown format** but **must not be wrapped in code blocks**.
+Create a comprehensive and detailed pull request description in {{language}} based on the provided raw Git diff. The description should be in **Markdown format** but **must not be wrapped in code blocks**.
 
 The description should include the following detailed sections:
 
@@ -20,9 +17,8 @@ The description should include the following detailed sections:
 - Include technical details that would be helpful for code reviewers.
 - Explain not just what was changed, but why it was changed.
 - For complex changes, include code snippets or examples where appropriate.
-- The content must be written in ${language === "en" ? "English" : "Spanish"}.
+- The content must be written in {{language}}.
 
 Here is the raw Git diff:
 
-${rawDiff}`;
-}
+{{diff}}

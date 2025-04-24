@@ -143,7 +143,7 @@ async function contentToMarkdown(content: string, output_file: string) {
 
   // Write the content to the file
   await Bun.write(outputPath, content);
-  console.log(`✅ File ${output_file}.md created successfully in ${outputDir}`);
+  console.log(`✅ File ${output_file}.md created successfully in ${outputDir}/${output_file}.md`);
 }
 
 async function setContent(

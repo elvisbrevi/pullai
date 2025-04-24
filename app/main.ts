@@ -43,7 +43,7 @@ const selectedProvider = await select({
 // Get template choices and select a template
 const templateChoices = await getTemplateChoices();
 const selectedTemplate = await select({
-  message: "Select the template to use",
+  message: "Select the template to use (add more in ~/.pullai/templates/)",
   choices: templateChoices,
 });
 

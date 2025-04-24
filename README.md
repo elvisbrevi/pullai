@@ -10,7 +10,7 @@ PULLAI is a command-line tool that automatically generates descriptive and well-
 - 🔄 Compare any two Git branches
 - 🌐 Generate descriptions in multiple languages (English, Spanish)
 - 📝 Create well-structured Markdown documents
-- 🧠 AI-powered analysis of code changes
+- 🧠 AI-powered analysis of code changes with multiple AI providers (OpenAI, Deepseek)
 - 🔍 Detailed breakdown of modifications, additions, and deletions
 
 ## 📋 Table of Contents
@@ -45,11 +45,17 @@ bun install -g pullai
 bun install pullai
 ```
 
-You'll need an OpenAI API key set in your environment:
+You'll need to set environment variables for the API keys of the AI providers you want to use:
 
 ```bash
-export OPENAI_API_KEY=your-api-key
+# For OpenAI
+export OPENAI_API_KEY=your-openai-api-key
+
+# For Deepseek
+export DEEPSEEK_API_KEY=your-deepseek-api-key
 ```
+
+Note: The application directly uses these environment variables, not .env files. Make sure to export them in your terminal session before running the application.
 
 ## 🚀 Usage
 
@@ -61,10 +67,11 @@ pullai
 
 Then follow the interactive prompts:
 
-1. Select the source branch (branch with changes)
-2. Select the destination branch (branch to merge into)
-3. Choose your preferred language for the output
-4. Enter a name for the output file
+1. Select the AI provider to use (OpenAI or Deepseek)
+2. Select the source branch (branch with changes)
+3. Select the destination branch (branch to merge into)
+4. Choose your preferred language for the output
+5. Enter a name for the output file
 
 The generated file will be saved in the `outputs/` directory.
 
@@ -77,32 +84,37 @@ Here's a sample of what a generated PR description might look like:
 ```markdown
 # Description
 
-This PR introduces a major refactoring of the code structure, improving modularity 
-by separating AI and Git services into individual modules. The change enhances 
+This PR introduces a major refactoring of the code structure, improving modularity
+by separating AI and Git services into individual modules. The change enhances
 maintainability and creates a cleaner architecture.
 
 # Added Files
+
 - app/ai-provider/openai.ts
 - app/services/git.ts
 - app/types/choice.ts
 
 # Modified Files
+
 - package.json
 - app/main.ts
 
 # Deleted Files
+
 - src/main.ts
 
 # Change Details
 
 ## app/ai-provider/openai.ts
-This new file encapsulates all OpenAI API interactions, implementing a dedicated 
-function `formatContentWithAI` that handles PR description generation with 
+
+This new file encapsulates all OpenAI API interactions, implementing a dedicated
+function `formatContentWithAI` that handles PR description generation with
 multilingual support.
 
 ## app/services/git.ts
-This module contains all Git-related functionality, including methods to retrieve 
-branch differences and parse Git diffs. It implements proper error handling and 
+
+This module contains all Git-related functionality, including methods to retrieve
+branch differences and parse Git diffs. It implements proper error handling and
 excludes irrelevant files from processing.
 ```
 
@@ -130,4 +142,4 @@ MIT
 
 ---
 
-Made with ❤️ using [OpenAI](https://openai.com/), [Bun](https://bun.sh/), and [Inquirer.js](https://github.com/SBoudrias/Inquirer.js)
+Made with ❤️ using [OpenAI](https://openai.com/), [Deepseek](https://deepseek.com/), [Bun](https://bun.sh/), and [Inquirer.js](https://github.com/SBoudrias/Inquirer.js)

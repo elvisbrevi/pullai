@@ -2,18 +2,20 @@ import OpenAI from "openai";
 
 async function formatContentWithAI(rawDiff: string, language: string) {
   console.log(
-    `🤖 Formatting content with OpenAI in ${
+    `🤖 Formatting content with Deepseek in ${
       language === "en" ? "English" : "Spanish"
     }`
   );
 
-  // Check if OPENAI_API_KEY is set
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error("OPENAI_API_KEY environment variable is not set. Please set it before using the OpenAI provider.");
+  // Check if DEEPSEEK_API_KEY is set
+  if (!process.env.DEEPSEEK_API_KEY) {
+    throw new Error("DEEPSEEK_API_KEY environment variable is not set. Please set it before using the Deepseek provider.");
   }
 
+  // Initialize OpenAI client with Deepseek base URL
   const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    baseURL: "https://api.deepseek.com",
+    apiKey: process.env.DEEPSEEK_API_KEY,
   });
 
   const prompt = getPrompt(rawDiff, language);
@@ -25,7 +27,7 @@ async function formatContentWithAI(rawDiff: string, language: string) {
         content: prompt,
       },
     ],
-    model: "gpt-4",
+    model: "deepseek-chat", // Using Deepseek's model
   });
 
   return completion.choices[0].message.content

@@ -4,7 +4,7 @@ import select from "@inquirer/select";
 import input from "@inquirer/input";
 import type { Choice } from "./types/choice";
 import { getDiff, getSummary, git } from "./services/git";
-import formatContentWithAI from "./ai-provider/openai";
+import { aiProviders, getAIProvider } from "./ai-provider";
 
 const languageChoices: Choice<string>[] = [
   {
@@ -29,6 +29,12 @@ for (const branch in branchSummary.branches) {
   });
 }
 
+// Select AI provider
+const selectedProvider = await select({
+  message: "Select the AI provider to use",
+  choices: aiProviders,
+});
+
 const originBranch = await select({
   message: "Select the source branch to merge from",
   choices: branchChoices,
@@ -49,10 +55,35 @@ const output_file = await input({
 });
 
 async function main() {
-  const diffSummary = await getSummary(targetBranch, originBranch);
-  let content = await setContent(diffSummary, targetBranch, originBranch);
-  content = await formatContentWithAI(content, selectedLanguage);
-  await contentToMarkdown(content, output_file);
+  try {
+    const diffSummary = await getSummary(targetBranch, originBranch);
+    let content = await setContent(diffSummary, targetBranch, originBranch);
+
+    // Get the selected AI provider and use its formatContentWithAI function
+    const aiProvider = getAIProvider(selectedProvider);
+
+    try {
+      content = await aiProvider.formatContentWithAI(content, selectedLanguage);
+      await contentToMarkdown(content, output_file);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(`❌ Error using ${aiProvider.name} provider: ${error.message}`);
+        if (aiProvider.value === "deepseek" && !process.env.DEEPSEEK_API_KEY) {
+          console.error("Please set the DEEPSEEK_API_KEY environment variable:");
+          console.error("export DEEPSEEK_API_KEY=your_deepseek_api_key");
+        } else if (aiProvider.value === "openai" && !process.env.OPENAI_API_KEY) {
+          console.error("Please set the OPENAI_API_KEY environment variable:");
+          console.error("export OPENAI_API_KEY=your_openai_api_key");
+        }
+      } else {
+        console.error("❌ An unknown error occurred");
+      }
+      process.exit(1);
+    }
+  } catch (error) {
+    console.error("❌ An error occurred:", error instanceof Error ? error.message : "Unknown error");
+    process.exit(1);
+  }
 }
 
 async function contentToMarkdown(content: string, output_file: string) {

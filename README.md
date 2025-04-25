@@ -5,6 +5,9 @@
 
 PULLAI is a command-line tool that automatically generates descriptive and well-formatted pull request descriptions from Git diffs using AI. Save time and improve your PR documentation with smart, AI-generated content.
 
+## ✨ Demo
+https://github.com/user-attachments/assets/a14e78d5-395d-4d79-848e-40342ac9a7b5
+
 ## ✨ Features
 
 - 🔄 Compare any two Git branches

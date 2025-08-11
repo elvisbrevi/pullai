@@ -10,14 +10,14 @@
     "@types/bun": "latest"
   },
   "bin": {
-    "pullai": "./bin/pullai",
-    "prai": "./bin/pullai"
+    "pullai": "dist/main.js",
+    "prai": "dist/main.js"
   },
   "scripts": {
     "start": "bun app/main.ts",
     "dev": "bun --hot app/main.ts",
-    "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "build": "bun build ./app/main.ts --outdir ./dist --target node",
+    "prepublishOnly": "bun run build"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/elvisbrevi/pullai.git"
+    "url": "git+https://github.com/elvisbrevi/pullai.git"
   },
   "keywords": [
     "pull-request",
@@ -48,9 +48,9 @@
     ".": "./app/main.ts"
   },
   "files": [
-    "app",
-    "bin",
-    "templates"
+    "dist",
+    "templates",
+    "README.md"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

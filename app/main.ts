@@ -175,7 +175,13 @@ async function contentToMarkdown(content: string, output_file: string) {
   }
 
   // Write the content to the file
-  await Bun.write(outputPath, content);
+  if (typeof Bun !== 'undefined') {
+    // Use Bun's write method when available
+    await Bun.write(outputPath, content);
+  } else {
+    // Use Node.js fs when Bun is not available
+    await fs.promises.writeFile(outputPath, content, 'utf-8');
+  }
   console.log(`✅ File ${output_file}.md created successfully in ${outputDir}/${output_file}.md`);
 }
 

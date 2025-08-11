@@ -5,6 +5,8 @@
 
 PULLAI is a command-line tool that automatically generates descriptive and well-formatted pull request descriptions from Git diffs using AI. Save time and improve your PR documentation with smart, AI-generated content.
 
+**🚀 Works with both Node.js and Bun** - No complex setup required!
+
 ## 🎬 Demo
 
 https://github.com/user-attachments/assets/a14e78d5-395d-4d79-848e-40342ac9a7b5
@@ -32,19 +34,9 @@ https://github.com/user-attachments/assets/a14e78d5-395d-4d79-848e-40342ac9a7b5
 
 ### Prerequisites
 
-This tool can be run with either [Bun](https://bun.sh/) (recommended) or Node.js with npx.
-
-**Option 1: Using Bun (Recommended)**
-```bash
-# For macOS, Linux, and WSL
-curl -fsSL https://bun.sh/install | bash
-
-# For Windows (using PowerShell)
-powershell -c "irm bun.sh/install.ps1 | iex"
-```
-
-**Option 2: Using Node.js**
-Ensure you have Node.js (v18+) installed on your system.
+No prerequisites needed! The tool works with both Node.js and Bun out of the box.
+- **Node.js** (v14+) - Most users already have this
+- **Bun** (optional) - For faster performance
 
 ### Using npx (No installation required)
 
@@ -78,7 +70,7 @@ pullai
 
 ### Development Installation
 
-If you're developing or modifying the tool, you can link it locally:
+If you're developing or modifying the tool:
 
 ```bash
 # Clone the repository
@@ -86,13 +78,13 @@ git clone https://github.com/elvisbrevi/pullai.git
 cd pullai
 
 # Install dependencies
-bun install
+bun install  # or npm install
 
-# Link the package for local development
-bun link
+# Run in development mode
+bun run dev  # or bun app/main.ts
 
-# Now you can run the tool with
-pullai
+# Build for distribution
+bun run build
 ```
 
 You'll need to set environment variables for the API keys of the AI providers you want to use:

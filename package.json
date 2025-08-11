@@ -1,6 +1,6 @@
 {
   "name": "pullai",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "author": "Elvis Brevi",
   "license": "MIT",
   "description": "AI-Powered Pull Request Descriptions generator",
@@ -10,7 +10,14 @@
     "@types/bun": "latest"
   },
   "bin": {
-    "pullai": "./bin/pullai"
+    "pullai": "./bin/pullai",
+    "prai": "./bin/pullai"
+  },
+  "scripts": {
+    "start": "bun app/main.ts",
+    "dev": "bun --hot app/main.ts",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
@@ -19,7 +26,8 @@
     "@inquirer/input": "^4.1.5",
     "@inquirer/select": "^4.0.8",
     "openai": "^4.83.0",
-    "simple-git": "^3.27.0"
+    "simple-git": "^3.27.0",
+    "tsx": "^4.19.2"
   },
   "repository": {
     "type": "git",

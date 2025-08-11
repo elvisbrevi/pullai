@@ -1,3 +1,5 @@
+import type { ModelConfig } from "./models";
+
 /**
  * Type definition for template functions used by AI providers
  * A template function takes a raw diff and language code and returns a formatted prompt
@@ -14,6 +16,9 @@ export abstract class AIProviderStrategy {
   abstract formatContentWithAI(
     rawDiff: string,
     language: string,
-    templateFn: TemplateFunction
+    templateFn: TemplateFunction,
+    model?: ModelConfig
   ): Promise<string>;
+
+  abstract getDefaultModel(): ModelConfig;
 }

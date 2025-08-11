@@ -6,5 +6,12 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Get the parent directory (project root)
 PROJECT_DIR="$( cd "$SCRIPT_DIR/.." && pwd )"
 
-# Run the main.ts file with Bun
-exec bun "$PROJECT_DIR/app/main.ts" "$@"
+# Try to run with bun first, fallback to npx tsx if bun is not available
+if command -v bun >/dev/null 2>&1; then
+    exec bun "$PROJECT_DIR/app/main.ts" "$@"
+elif command -v npx >/dev/null 2>&1; then
+    exec npx tsx "$PROJECT_DIR/app/main.ts" "$@"
+else
+    echo "Error: Neither bun nor npx/tsx is available. Please install one of them."
+    exit 1
+fi

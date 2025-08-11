@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(chmod:*)",
+      "Bash(./test-npx.sh)",
+      "Bash(rm:*)"
+    ],
+    "deny": []
+  }
+}

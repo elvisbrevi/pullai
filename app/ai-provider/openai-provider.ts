@@ -1,19 +1,28 @@
 import OpenAI from "openai";
 import { AIProviderStrategy } from "./base-provider";
 import type { TemplateFunction } from "./base-provider";
+import type { ModelConfig } from "./models";
+import { availableModels } from "./models";
 
 export class OpenAIProvider extends AIProviderStrategy {
   constructor() {
     super("OpenAI", "openai", "Use OpenAI's GPT models");
   }
 
+  getDefaultModel(): ModelConfig {
+    return availableModels.openai[0]; // GPT-5
+  }
+
   async formatContentWithAI(
     rawDiff: string,
     language: string,
-    templateFn: TemplateFunction
+    templateFn: TemplateFunction,
+    model?: ModelConfig
   ): Promise<string> {
+    const selectedModel = model || this.getDefaultModel();
+    
     console.log(
-      `🤖 Formatting content with OpenAI in ${
+      `🤖 Formatting content with OpenAI ${selectedModel.name} in ${
         language === "en" ? "English" : "Spanish"
       }`
     );
@@ -38,7 +47,7 @@ export class OpenAIProvider extends AIProviderStrategy {
           content: prompt,
         },
       ],
-      model: "gpt-4-turbo",
+      model: selectedModel.id,
     });
 
     return completion.choices[0].message.content

@@ -8,6 +8,7 @@ import type { Choice } from "./types/choice";
 import { getDiff, getSummary, git } from "./services/git";
 import { aiProviderChoices, getAIProvider } from "./ai-provider";
 import { getTemplateByName, getTemplateChoices, getTemplateContent } from "./services/template-loader";
+import { getModelsForProvider, countTokensApprox, estimateCost, type ModelConfig } from "./ai-provider/models";
 
 // Define language choices
 const languageChoices: Choice<string>[] = [
@@ -39,6 +40,22 @@ const selectedProvider = await select({
   message: "Select the AI provider to use",
   choices: aiProviderChoices,
 });
+
+// Get available models for the selected provider
+const availableProviderModels = getModelsForProvider(selectedProvider);
+const modelChoices: Choice<string>[] = availableProviderModels.map((model) => ({
+  name: `${model.name} - $${model.inputTokenCost}/$${model.outputTokenCost} per 1M tokens`,
+  value: model.id,
+  description: model.description,
+}));
+
+// Select model
+const selectedModelId = await select({
+  message: "Select the model to use",
+  choices: modelChoices,
+});
+
+const selectedModel = availableProviderModels.find(m => m.id === selectedModelId)!;
 
 // Get template choices and select a template
 const templateChoices = await getTemplateChoices();
@@ -80,17 +97,31 @@ async function main() {
     const aiProvider = getAIProvider(selectedProvider);
     const template = await getTemplateByName(selectedTemplate);
 
-    try {
-      // Create a template function that uses the loaded template content
-      const templateFunction = (rawDiff: string, language: string) => {
-        return getTemplateContent(rawDiff, language, template.content);
-      };
+    // Create a template function that uses the loaded template content
+    const templateFunction = (rawDiff: string, language: string) => {
+      return getTemplateContent(rawDiff, language, template.content);
+    };
 
+    // Estimate cost before making the API call
+    const prompt = templateFunction(content, selectedLanguage);
+    const inputTokens = countTokensApprox(prompt);
+    const estimatedOutputTokens = Math.ceil(inputTokens * 0.5); // Estimate output as 50% of input
+    const estimatedCost = estimateCost(inputTokens, estimatedOutputTokens, selectedModel);
+
+    console.log(`\n📊 Cost Estimation:`);
+    console.log(`   Model: ${selectedModel.name}`);
+    console.log(`   Input tokens: ~${inputTokens.toLocaleString()}`);
+    console.log(`   Estimated output tokens: ~${estimatedOutputTokens.toLocaleString()}`);
+    console.log(`   Estimated cost: $${estimatedCost.toFixed(4)}`);
+    console.log('');
+
+    try {
       // Use the selected template and AI provider
       content = await aiProvider.formatContentWithAI(
         content,
         selectedLanguage,
-        templateFunction
+        templateFunction,
+        selectedModel
       );
       await contentToMarkdown(content, output_file);
     } catch (error) {

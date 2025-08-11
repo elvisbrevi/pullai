@@ -1,19 +1,28 @@
 import OpenAI from "openai";
 import { AIProviderStrategy } from "./base-provider";
 import type { TemplateFunction } from "./base-provider";
+import type { ModelConfig } from "./models";
+import { availableModels } from "./models";
 
 export class DeepseekProvider extends AIProviderStrategy {
   constructor() {
     super("Deepseek", "deepseek", "Use Deepseek's AI models");
   }
 
+  getDefaultModel(): ModelConfig {
+    return availableModels.deepseek[0]; // DeepSeek Reasoner
+  }
+
   async formatContentWithAI(
     rawDiff: string,
     language: string,
-    templateFn: TemplateFunction
+    templateFn: TemplateFunction,
+    model?: ModelConfig
   ): Promise<string> {
+    const selectedModel = model || this.getDefaultModel();
+    
     console.log(
-      `🤖 Formatting content with Deepseek in ${
+      `🤖 Formatting content with Deepseek ${selectedModel.name} in ${
         language === "en" ? "English" : "Spanish"
       }`
     );
@@ -40,7 +49,7 @@ export class DeepseekProvider extends AIProviderStrategy {
           content: prompt,
         },
       ],
-      model: "deepseek-reasoner", // Using Deepseek's model
+      model: selectedModel.id,
     });
 
     return completion.choices[0].message.content

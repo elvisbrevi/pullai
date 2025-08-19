@@ -1,6 +1,6 @@
 {
   "name": "pullai",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "author": "Elvis Brevi",
   "license": "MIT",
   "description": "AI-Powered Pull Request Descriptions generator",

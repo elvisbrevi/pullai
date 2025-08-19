@@ -9,7 +9,7 @@ PULLAI is a command-line tool that automatically generates descriptive and well-
 
 ## 🎬 Demo
 
-https://github.com/user-attachments/assets/a14e78d5-395d-4d79-848e-40342ac9a7b5
+![437259237-a14e78d5-395d-4d79-848e-40342ac9a7b5 (2)](https://github.com/user-attachments/assets/00665375-b538-4c4d-9ef4-78247ebe2695)
 
 ## ✨ Features
 

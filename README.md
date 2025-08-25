@@ -72,13 +72,18 @@ pullai
 
 If you're developing or modifying the tool:
 
+**Prerequisites**: Bun is required for development (the app is configured to run with Bun)
+
 ```bash
+# Install Bun if you don't have it
+curl -fsSL https://bun.sh/install | bash
+
 # Clone the repository
 git clone https://github.com/elvisbrevi/pullai.git
 cd pullai
 
 # Install dependencies
-bun install  # or npm install
+bun install
 
 # Run in development mode
 bun run dev  # or bun app/main.ts

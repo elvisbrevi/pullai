@@ -10,6 +10,20 @@ import { aiProviderChoices, getAIProvider } from "./ai-provider";
 import { getTemplateByName, getTemplateChoices, getTemplateContent } from "./services/template-loader";
 import { getModelsForProvider, countTokensApprox, estimateCost, type ModelConfig } from "./ai-provider/models";
 
+// Common theme configuration for better visibility
+const selectTheme = {
+  prefix: '?',
+  style: {
+    answer: (text: string) => text,
+    message: (text: string) => text,
+    error: (text: string) => text,
+    defaultAnswer: (text: string) => text,
+    help: (text: string) => text,
+    highlight: (text: string) => `\x1b[36m${text}\x1b[0m`, // Cyan highlight for selected
+    description: (text: string) => `\x1b[2m${text}\x1b[0m`, // Dim description
+  }
+};
+
 // Define language choices
 const languageChoices: Choice<string>[] = [
   {
@@ -39,6 +53,7 @@ for (const branch in branchSummary.branches) {
 const selectedProvider = await select({
   message: "Select the AI provider to use",
   choices: aiProviderChoices,
+  theme: selectTheme,
 });
 
 // Get available models for the selected provider
@@ -53,6 +68,7 @@ const modelChoices: Choice<string>[] = availableProviderModels.map((model) => ({
 const selectedModelId = await select({
   message: "Select the model to use",
   choices: modelChoices,
+  theme: selectTheme,
 });
 
 const selectedModel = availableProviderModels.find(m => m.id === selectedModelId)!;
@@ -62,24 +78,28 @@ const templateChoices = await getTemplateChoices();
 const selectedTemplate = await select({
   message: "Select the template to use (add more in ~/.pullai/templates/)",
   choices: templateChoices,
+  theme: selectTheme,
 });
 
 // Select branches
 const originBranch = await select({
   message: "Select the source branch to merge from",
   choices: branchChoices,
+  theme: selectTheme,
 });
 
 // Select target branch
 const targetBranch = await select({
   message: "Select the destination branch to merge into",
   choices: branchChoices,
+  theme: selectTheme,
 });
 
 // Select language
 const selectedLanguage = await select({
   message: "Select the output document language",
   choices: languageChoices,
+  theme: selectTheme,
 });
 
 // Select output file name

@@ -13,14 +13,17 @@ import { getModelsForProvider, countTokensApprox, estimateCost, type ModelConfig
 // Common theme configuration for better visibility
 const selectTheme = {
   prefix: '?',
+  icons: {
+    pointer: '>',  // Use ASCII pointer instead of Unicode arrow
+  },
   style: {
     answer: (text: string) => text,
     message: (text: string) => text,
     error: (text: string) => text,
     defaultAnswer: (text: string) => text,
     help: (text: string) => text,
-    highlight: (text: string) => `\x1b[36m${text}\x1b[0m`, // Cyan highlight for selected
-    description: (text: string) => `\x1b[2m${text}\x1b[0m`, // Dim description
+    highlight: (text: string) => text,
+    description: (text: string) => text,
   }
 };
 

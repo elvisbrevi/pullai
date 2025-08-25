@@ -75,9 +75,19 @@ export async function loadAllTemplates(): Promise<Template[]> {
   // In production (bundled), import.meta.url points to dist/main.js
   const currentFilePath = import.meta.url.replace('file://', '');
   const isInAppDir = currentFilePath.includes('/app/');
-  const appRoot = isInAppDir 
-    ? path.dirname(path.dirname(path.dirname(currentFilePath))) // Go up from app/services/template-loader.ts to project root
-    : path.dirname(currentFilePath); // Go up from dist/main.js to project root
+  const isInDistDir = currentFilePath.includes('/dist/');
+  
+  let appRoot: string;
+  if (isInAppDir) {
+    // Dev mode: app/services/template-loader.ts -> go up 3 levels to project root
+    appRoot = path.dirname(path.dirname(path.dirname(currentFilePath)));
+  } else if (isInDistDir) {
+    // Production mode: dist/main.js -> go up 2 levels to project root
+    appRoot = path.dirname(path.dirname(currentFilePath));
+  } else {
+    // Fallback: assume we're at the root level
+    appRoot = path.dirname(currentFilePath);
+  }
 
   // Define directories to check for templates
   const templateDirs: string[] = [];

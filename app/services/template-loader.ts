@@ -70,12 +70,19 @@ export async function loadAllTemplates(): Promise<Template[]> {
   };
 
   // Get the application's root directory
-  const appRoot = process.cwd();
+  // When running via npx, we need to find where the app is installed, not the current working directory
+  // In dev mode (bun --hot app/main.ts), import.meta.url points to app/services/template-loader.ts
+  // In production (bundled), import.meta.url points to dist/main.js
+  const currentFilePath = import.meta.url.replace('file://', '');
+  const isInAppDir = currentFilePath.includes('/app/');
+  const appRoot = isInAppDir 
+    ? path.dirname(path.dirname(path.dirname(currentFilePath))) // Go up from app/services/template-loader.ts to project root
+    : path.dirname(currentFilePath); // Go up from dist/main.js to project root
 
   // Define directories to check for templates
   const templateDirs: string[] = [];
 
-  // 1. Check for templates in the current working directory
+  // 1. Check for templates in the application's directory
   templateDirs.push(path.join(appRoot, "templates"));
 
   // 2. Check for templates in the user's home directory
